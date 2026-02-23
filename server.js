@@ -34,6 +34,19 @@ app.get('/api/create-admin', async (req, res) => {
   } catch(e) {
     res.json({ error: e.message });
   }
+});app.get('/api/create-users', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    await User.deleteMany({});
+    await User.create([
+      { name: 'Admin Kumar', email: 'admin@hms.com', password: 'admin123', role: 'Admin', department: 'Administration' },
+      { name: 'Dr. Priya Sharma', email: 'doctor@hms.com', password: 'doctor123', role: 'Doctor', department: 'Cardiology' },
+      { name: 'Anita Singh', email: 'receptionist@hms.com', password: 'recep123', role: 'Receptionist', department: 'Front Desk' }
+    ]);
+    res.json({ message: 'All 3 users created!' });
+  } catch(e) {
+    res.json({ error: e.message });
+  }
 });
 app.use((err, req, res, next) => {
   console.error(err.stack);
