@@ -18,7 +18,23 @@ app.use('/api/staff', require('./routes/staffRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 
 app.get('/api/health', (req, res) => res.json({ status: 'OK', timestamp: new Date() }));
-
+app.get('/api/create-admin', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const exists = await User.findOne({ email: 'admin@hms.com' });
+    if (exists) return res.json({ message: 'Admin already exists! Try logging in.' });
+    await User.create({
+      name: 'Admin User',
+      email: 'admin@hms.com',
+      password: 'admin123',
+      role: 'Admin',
+      department: 'Administration'
+    });
+    res.json({ message: 'Admin created! Login with admin@hms.com / admin123' });
+  } catch(e) {
+    res.json({ error: e.message });
+  }
+});
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Internal Server Error' });
